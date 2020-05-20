@@ -1,7 +1,7 @@
 use crate::types::*;
 
 /// This object represents an incoming callback query from a callback button in an inline keyboard.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct CallbackQuery {
     /// Unique identifier for this query
     pub id: CallbackQueryId,

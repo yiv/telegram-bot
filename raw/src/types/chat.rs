@@ -1,26 +1,32 @@
 use serde::de::{Deserialize, Deserializer, Error};
+use serde::ser::SerializeStruct;
+use serde::Serialize;
 
 use crate::types::*;
+use serde::Serializer;
 
 /// This object represents a Telegram user or bot.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash, Deserialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash, Deserialize, Serialize)]
 pub struct User {
     /// Unique identifier for this user or bot.
     pub id: UserId,
     /// User‘s or bot’s first name.
     pub first_name: String,
     /// User‘s or bot’s last name.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub last_name: Option<String>,
     /// User‘s or bot’s username.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub username: Option<String>,
     /// True, if this user is a bot.
     pub is_bot: bool,
     /// IETF language tag of the user's language
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub language_code: Option<String>,
 }
 
 /// This object represents a group.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash, Deserialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash, Deserialize, Serialize)]
 pub struct Group {
     /// Unique identifier for this chat.
     pub id: GroupId,
@@ -31,44 +37,52 @@ pub struct Group {
     /// Invite link for this group, specific to this bot.
     /// You can generate a new invite link by using the
     /// export_invite_link method.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub invite_link: Option<String>,
 }
 
 /// This object represents a supergroup.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash, Deserialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash, Deserialize, Serialize)]
 pub struct Supergroup {
     /// Unique identifier for this chat.
     pub id: SupergroupId,
     /// Title, for supergroups, channels and group chats.
     pub title: String,
     /// Username for supergroup.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub username: Option<String>,
     /// Invite link for this supergroup, specific to this bot.
     /// You can generate a new invite link by using the
     /// export_invite_link method.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub invite_link: Option<String>,
 }
 
 /// This object represents a channel.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash, Deserialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash, Deserialize, Serialize)]
 pub struct Channel {
     /// Unique identifier for this chat.
     pub id: ChannelId,
     /// Title, for supergroups, channels and group chats.
     pub title: String,
     /// Username for channel.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub username: Option<String>,
     /// Invite link for this channel, specific to this bot.
     /// You can generate a new invite link by using the
     /// export_invite_link method.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub invite_link: Option<String>,
 }
 
 /// This object represents a private, group or supergroup.
 #[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash)]
 pub enum MessageChat {
+    // #[serde(rename = "chat")]
     Private(User),
+    // #[serde(rename = "chat")]
     Group(Group),
+    // #[serde(rename = "chat")]
     Supergroup(Supergroup),
     #[doc(hidden)]
     Unknown(RawChat),
@@ -85,8 +99,61 @@ impl MessageChat {
     }
 }
 
+impl serde::ser::Serialize for MessageChat {
+    fn serialize<S>(&self, serializer: S) -> Result<<S as Serializer>::Ok, <S as Serializer>::Error> where
+        S: Serializer {
+        match self {
+            MessageChat::Private(u) => {
+                let raw_chat = RawChat {
+                    id: u.id.into(),
+                    type_: "private".to_string(),
+                    title: None,
+                    username: u.username.clone(),
+                    first_name: u.first_name.clone().into(),
+                    last_name: u.last_name.clone(),
+                    invite_link: None,
+                    language_code: u.language_code.clone(),
+                    all_members_are_administrators: None,
+                };
+                serializer.serialize_newtype_struct("chat", &raw_chat)
+            }
+            MessageChat::Group(g) => {
+                let raw_chat = RawChat {
+                    id: g.id.into(),
+                    type_: "private".to_string(),
+                    title: g.title.clone().into(),
+                    username: None,
+                    first_name: None,
+                    last_name: None,
+                    invite_link: g.invite_link.clone(),
+                    language_code: None,
+                    all_members_are_administrators: g.all_members_are_administrators.into(),
+                };
+                serializer.serialize_newtype_struct("chat", &raw_chat)
+            }
+            MessageChat::Supergroup(g) => {
+                let raw_chat = RawChat {
+                    id: g.id.into(),
+                    type_: "private".to_string(),
+                    title: g.title.clone().into(),
+                    username: None,
+                    first_name: None,
+                    last_name: None,
+                    invite_link: g.invite_link.clone(),
+                    language_code: None,
+                    all_members_are_administrators: None
+                };
+                serializer.serialize_newtype_struct("chat", &raw_chat)
+            }
+            MessageChat::Unknown(c) => {
+                serializer.serialize_newtype_struct("chat", c)
+            }
+        }
+    }
+}
+
 /// This object represents a chat.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash, Serialize)]
 pub enum Chat {
     Private(User),
     Group(Group),
@@ -110,8 +177,8 @@ impl Chat {
 
 impl<'de> Deserialize<'de> for Chat {
     fn deserialize<D>(deserializer: D) -> Result<Chat, D::Error>
-    where
-        D: Deserializer<'de>,
+        where
+            D: Deserializer<'de>,
     {
         let raw: RawChat = Deserialize::deserialize(deserializer)?;
 
@@ -157,7 +224,7 @@ impl<'de> Deserialize<'de> for Chat {
 }
 
 /// This object represents a chat, directly mapped.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash, Deserialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash, Deserialize, Serialize)]
 pub struct RawChat {
     /// Unique identifier for this chat.
     pub id: Integer,
@@ -165,18 +232,25 @@ pub struct RawChat {
     #[serde(rename = "type")]
     pub type_: String,
     /// Title, for supergroups, channels and group chats
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub title: Option<String>,
     /// Username, for private chats, supergroups and channels if available
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub username: Option<String>,
     /// First name of the other party in a private chat
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub first_name: Option<String>,
     /// Last name of the other party in a private chat
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub last_name: Option<String>,
     /// Invite link for this chat, specific to this bot.
     /// Does not apply to private chats.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub invite_link: Option<String>,
     /// IETF language tag of the other party in a private chat
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub language_code: Option<String>,
     /// True if a group has ‘All Members Are Admins’ enabled.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub all_members_are_administrators: Option<bool>,
 }

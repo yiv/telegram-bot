@@ -4,89 +4,111 @@ use crate::types::*;
 use crate::url::*;
 
 /// This object represents a chat message or a channel post.
-#[derive(Debug, Clone, PartialEq, PartialOrd)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
 pub enum MessageOrChannelPost {
     Message(Message),
     ChannelPost(ChannelPost),
 }
 
 /// This object represents a chat message.
-#[derive(Debug, Clone, PartialEq, PartialOrd)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
 pub struct Message {
     /// Unique message identifier inside this chat.
+    #[serde(rename = "message_id")]
     pub id: MessageId,
     /// Sender, can be empty for messages sent to channels.
     pub from: User,
     /// Date the message was sent in Unix time.
     pub date: Integer,
     /// Conversation the message belongs to.
+    // #[serde(flatten)]
     pub chat: MessageChat,
     /// Information about the original message.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(flatten)]
     pub forward: Option<Forward>,
     /// For replies, the original message. Note that the Message object in this field will not
     /// contain further reply_to_message fields even if it itself is a reply.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub reply_to_message: Option<Box<MessageOrChannelPost>>,
     /// Date the message was last edited in Unix time.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub edit_date: Option<Integer>,
     /// Kind of the message.
+    #[serde(flatten)]
     pub kind: MessageKind,
 }
 
 /// This object represents a channel message.
-#[derive(Debug, Clone, PartialEq, PartialOrd)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
 pub struct ChannelPost {
     /// Unique message identifier inside this chat.
+    #[serde(rename = "message_id")]
     pub id: MessageId,
     /// Date the message was sent in Unix time.
     pub date: Integer,
     /// Conversation the message belongs to.
     pub chat: Channel,
     /// Information about the original message.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(flatten)]
     pub forward: Option<Forward>,
     /// For replies, the original message. Note that the Message object in this field will not
     /// contain further reply_to_message fields even if it itself is a reply.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub reply_to_message: Option<Box<MessageOrChannelPost>>,
     /// Date the message was last edited in Unix time.
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub edit_date: Option<Integer>,
     /// Kind of the message.
+    #[serde(flatten)]
     pub kind: MessageKind,
 }
 
 /// Information about the original message.
-#[derive(Debug, Clone, PartialEq, PartialOrd)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
 pub struct Forward {
     /// Date the original message was sent in Unix time
+    #[serde(rename = "forward_date")]
     pub date: Integer,
     /// Sender of the original message.
+    #[serde(flatten)]
     pub from: ForwardFrom,
 }
 
 /// Information about the source of the original message.
-#[derive(Debug, Clone, PartialEq, PartialOrd)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
+#[serde(untagged)]
 pub enum ForwardFrom {
     /// Sender of the original message.
     User {
         /// Sender of the original message.
+        #[serde(rename = "forward_from")]
         user: User,
     },
     /// For messages forwarded from a channel, information about the original channel.
     Channel {
         /// Original channel.
+        #[serde(rename = "forward_from_chat")]
         channel: Channel,
         /// Identifier of the original message in the channel
+        #[serde(rename = "forward_from_message_id")]
         message_id: Integer,
     },
     ChannelHiddenUser {
+        #[serde(rename = "forward_sender_name")]
         sender_name: String,
     },
 }
 
 /// Kind of the message.
-#[derive(Debug, Clone, PartialEq, PartialOrd)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
+#[serde(untagged)]
 pub enum MessageKind {
     /// Text message.
     Text {
         /// Actual UTF-8 text of the message, 0-4096 characters.
+        #[serde(rename = "text")]
         data: String,
         /// Special entities like usernames, URLs, bot commands, etc. that appear in the text
         entities: Vec<MessageEntity>,
@@ -94,82 +116,101 @@ pub enum MessageKind {
     /// Message is an audio file.
     Audio {
         /// Information about the file.
+        #[serde(rename = "audio")]
         data: Audio,
     },
     /// Message is a general file.
     Document {
         /// Information about the file.
+        #[serde(rename = "document")]
         data: Document,
         /// Caption for the document, 0-200 characters.
+        #[serde(skip_serializing_if = "Option::is_none")]
         caption: Option<String>,
     },
     /// Message is a photo.
     Photo {
         /// Available sizes of the photo.
+        #[serde(rename = "photo")]
         data: Vec<PhotoSize>,
         /// Caption for the photo, 0-200 characters.
+        #[serde(skip_serializing_if = "Option::is_none")]
         caption: Option<String>,
         /// The unique identifier of a media message group this message belongs to.
+        #[serde(skip_serializing_if = "Option::is_none")]
         media_group_id: Option<String>,
     },
     /// Message is a sticker.
     Sticker {
         /// Information about the sticker.
+        #[serde(rename = "sticker")]
         data: Sticker,
     },
     /// Message is a video.
     Video {
         /// Information about the video.
+        #[serde(rename = "video")]
         data: Video,
         /// Caption for the video, 0-200 characters.
+        #[serde(skip_serializing_if = "Option::is_none")]
         caption: Option<String>,
         /// The unique identifier of a media message group this message belongs to.
+        #[serde(skip_serializing_if = "Option::is_none")]
         media_group_id: Option<String>,
     },
     /// Message is a voice message.
     Voice {
         /// Information about the file.
+        #[serde(rename = "voice")]
         data: Voice,
     },
     /// Message is a video note.
     VideoNote {
         /// Information about the file.
+        #[serde(rename = "video_note")]
         data: VideoNote,
     },
     /// Message is a shared contact.
     Contact {
         /// Information about the contact.
+        #[serde(rename = "contact")]
         data: Contact,
     },
     /// Message is a shared location.
     Location {
         /// Information about the location.
+        #[serde(rename = "location")]
         data: Location,
     },
     /// Message is a venue.
     Venue {
         /// Information about the venue.
+        #[serde(rename = "venue")]
         data: Venue,
     },
     /// New members that were added to the group or supergroup and
     /// information about them (the bot itself may be one of these members)
     NewChatMembers {
         /// Information about user (this member may be the bot itself).
+        #[serde(rename = "new_chat_members")]
         data: Vec<User>,
     },
     /// A member was removed from the group.
     LeftChatMember {
         /// Information about user (this member may be the bot itself).
+        #[serde(rename = "left_chat_member")]
         data: User,
     },
     /// New chat title.
     NewChatTitle {
         /// A chat title was changed to this value.
+        #[serde(rename = "new_chat_title")]
         data: String,
     },
     /// New chat photo.
     NewChatPhoto {
         /// A chat photo was change to this value.
+        #[serde(rename = "new_chat_photo")]
         data: Vec<PhotoSize>,
     },
     /// Service message: the chat photo was deleted.
@@ -189,17 +230,20 @@ pub enum MessageKind {
     /// The group has been migrated to a supergroup.
     MigrateToChatId {
         /// Supergroup chat identifier.
+        #[serde(rename = "migrate_to_chat_id")]
         data: Integer,
     },
     /// The supergroup has been migrated from a group.
     MigrateFromChatId {
         /// Group chat identifier.
+        #[serde(rename = "migrate_from_chat_id")]
         data: Integer,
     },
     /// Specified message was pinned.
     PinnedMessage {
         // Specified message was pinned. Note that the Message object in this field will not
         // contain further reply_to_message fields even if it is itself a reply.
+        #[serde(rename = "pinned_message")]
         data: Box<MessageOrChannelPost>,
     },
     #[doc(hidden)]
@@ -352,6 +396,19 @@ impl<'de> Deserialize<'de> for Message {
         Self::from_raw_message(raw).map_err(|err| D::Error::custom(err))
     }
 }
+
+// impl Serialize for MessageKind {
+//     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+//         where
+//             S: Serializer,
+//     {
+//         let mut s = serializer.serialize_struct("Message", 3)?;
+//         s.serialize_field("name", &self.name)?;
+//         s.serialize_field("age", &self.age)?;
+//         s.serialize_field("phones", &self.phones)?;
+//         s.end()
+//     }
+// }
 
 impl ChannelPost {
     fn from_raw_message(raw: RawMessage) -> Result<Self, String> {
@@ -515,7 +572,7 @@ impl<'de> Deserialize<'de> for MessageOrChannelPost {
 }
 
 /// This object represents a message. Directly mapped.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct RawMessage {
     /// Unique message identifier inside this chat.
     pub message_id: Integer,
@@ -605,7 +662,7 @@ pub struct RawMessage {
 
 /// This object represents one special entity in a text message.
 /// For example, hashtags, usernames, URLs, etc.
-#[derive(Debug, Clone, PartialEq, PartialOrd)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
 pub struct MessageEntity {
     /// Offset in UTF-16 code units to the start of the entity
     pub offset: Integer,
@@ -616,7 +673,7 @@ pub struct MessageEntity {
 }
 
 /// Kind of the entity.
-#[derive(Debug, Clone, PartialEq, PartialOrd)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
 pub enum MessageEntityKind {
     Mention,
     Hashtag,
@@ -679,7 +736,7 @@ impl<'de> Deserialize<'de> for MessageEntity {
 
 /// This object represents one special entity in a text message.
 /// For example, hashtags, usernames, URLs, etc. Directly mapped.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct RawMessageEntity {
     /// Type of the entity. Can be mention (@username), hashtag, bot_command, url, email,
     /// bold (bold text), italic (italic text), code (monowidth string), pre (monowidth block),
@@ -697,7 +754,7 @@ pub struct RawMessageEntity {
 }
 
 /// This object represents one size of a photo or a file / sticker thumbnail.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct PhotoSize {
     /// Unique identifier for this file.
     pub file_id: String,
@@ -710,7 +767,7 @@ pub struct PhotoSize {
 }
 
 /// This object represents an audio file to be treated as music by the Telegram clients.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct Audio {
     /// Unique identifier for this file.
     pub file_id: String,
@@ -727,7 +784,7 @@ pub struct Audio {
 }
 
 /// This object represents a general file (as opposed to photos, voice messages and audio files).
-#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct Document {
     /// Unique file identifier.
     pub file_id: String,
@@ -742,7 +799,7 @@ pub struct Document {
 }
 
 /// This object represents a sticker.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct Sticker {
     /// Identifier for this file, which can be used to download or reuse the file.
     pub file_id: String,
@@ -764,7 +821,7 @@ pub struct Sticker {
 }
 
 /// This object represents a video file.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct Video {
     /// Unique identifier for this file.
     pub file_id: String,
@@ -783,7 +840,7 @@ pub struct Video {
 }
 
 /// This object represents a voice note.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct Voice {
     /// Unique identifier for this file.
     pub file_id: String,
@@ -796,7 +853,7 @@ pub struct Voice {
 }
 
 /// This object represents a video message (available in Telegram apps as of v.4.0).
-#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct VideoNote {
     /// Unique identifier for this file.
     pub file_id: String,
@@ -810,7 +867,7 @@ pub struct VideoNote {
 }
 
 /// This object represents a phone contact.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct Contact {
     /// Contact's phone number.
     pub phone_number: String,
@@ -823,7 +880,7 @@ pub struct Contact {
 }
 
 /// This object represents a point on the map.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct Location {
     /// Longitude as defined by sender.
     pub longitude: Float,
@@ -832,7 +889,7 @@ pub struct Location {
 }
 
 /// This object represents a venue.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct Venue {
     /// Venue location.
     pub location: Location,
@@ -845,7 +902,7 @@ pub struct Venue {
 }
 
 /// This object represent a user's profile pictures.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct UserProfilePhotos {
     /// Total number of profile pictures the target user has.
     pub total_count: Integer,
@@ -856,7 +913,7 @@ pub struct UserProfilePhotos {
 /// This object represents a file ready to be downloaded.
 /// The file can be downloaded via the link `https://api.telegram.org/file/bot<token>/<file_path>`.
 /// It is guaranteed that the link will be valid for at least 1 hour.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct File {
     /// Unique identifier for this file.
     pub file_id: String,

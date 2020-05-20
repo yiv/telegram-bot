@@ -1,7 +1,7 @@
 use crate::types::*;
 
 /// This object represents an incoming update.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct Update {
     /// The update‘s unique identifier. Update identifiers start from a certain
     /// positive number and increase sequentially.
@@ -13,7 +13,7 @@ pub struct Update {
 }
 
 /// Kind of the incoming update.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub enum UpdateKind {
     /// New incoming message of any kind — text, photo, sticker, etc.
     #[serde(rename = "message")]

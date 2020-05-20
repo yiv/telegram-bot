@@ -46,3 +46,17 @@ make_test!(inline_query, |update: Update| {
 
     assert!(false)
 });
+
+#[test]
+fn test_encode_update(){
+    let s = r#"{"update_id":693714082,"message":{"message_id":146,"from":{"id":1022260800,"is_bot":false,"first_name":"barce","last_name":"shao","language_code":"zh-hans"},"chat":{"id":1022260800,"first_name":"barce","last_name":"shao","type":"private"},"date":1589885162,"forward_from":{"id":84210004,"is_bot":true,"first_name":"PollBot","username":"PollBot"},"forward_date":1589874674,"text":"Let's create a new poll. First, send me the question."}}"#;
+    let foward_from_channel = r#"{"update_id":693714083,"message":{"message_id":149,"from":{"id":1022260800,"is_bot":false,"first_name":"barce","last_name":"shao","language_code":"zh-hans"},"chat":{"id":1022260800,"first_name":"barce","last_name":"shao","type":"private"},"date":1589957567,"forward_from_chat":{"id":-1001337931577,"title":"TestChannel","username":"barceshao","type":"channel"},"forward_from_message_id":71,"forward_date":1589354052,"photo":[{"file_id":"AgACAgUAAxkBAAOVXsTTvzqLgkH1L_4HZYZq6UoiDnsAArKqMRshbNlVxWJn6YTOC-Vtc8NqdAADAQADAgADbQADveoBAAEZBA","file_unique_id":"AQADbXPDanQAA73qAQAB","file_size":13230,"width":240,"height":320},{"file_id":"AgACAgUAAxkBAAOVXsTTvzqLgkH1L_4HZYZq6UoiDnsAArKqMRshbNlVxWJn6YTOC-Vtc8NqdAADAQADAgADeAADvuoBAAEZBA","file_unique_id":"AQADbXPDanQAA77qAQAB","file_size":88369,"width":599,"height":800},{"file_id":"AgACAgUAAxkBAAOVXsTTvzqLgkH1L_4HZYZq6UoiDnsAArKqMRshbNlVxWJn6YTOC-Vtc8NqdAADAQADAgADeQADv-oBAAEZBA","file_unique_id":"AQADbXPDanQAA7_qAQAB","file_size":239430,"width":956,"height":1276}]}}"#;
+    let send_a_photo = r#"{"update_id":693714086,"message":{"message_id":154,"from":{"id":1022260800,"is_bot":false,"first_name":"barce","last_name":"shao","language_code":"zh-hans"},"chat":{"id":1022260800,"first_name":"barce","last_name":"shao","type":"private"},"date":1589958572,"photo":[{"file_id":"AgACAgUAAxkBAAOaXsTXrJpeG4gP_tUlUQXSDA14lnkAAkypMRvgnylWGv_0CCWYhGvWX2ZqdAADAQADAgADbQADpzwEAAEZBA","file_unique_id":"AQAD1l9manQAA6c8BAAB","file_size":3352,"width":200,"height":200}],"caption":"2sf"}}"#;
+    let edit_message = r#"{"update_id":693714088,"edited_message":{"message_id":155,"from":{"id":1022260800,"is_bot":false,"first_name":"barce","last_name":"shao","language_code":"zh-hans"},"chat":{"id":1022260800,"first_name":"barce","last_name":"shao","type":"private"},"date":1589958752,"edit_date":1589958770,"text":"456"}}"#;
+    let u = serde_json::from_str::<Update>(edit_message).unwrap();
+    println!("{:?}", u);
+
+    let s = serde_json::to_string(&u).unwrap();
+    println!("{}", s);
+
+}
