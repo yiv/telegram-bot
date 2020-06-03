@@ -5,10 +5,9 @@ use crate::requests::*;
 use crate::types::*;
 
 /// Use this method to send text messages.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize, Deserialize, Default)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[must_use = "requests do nothing unless sent"]
 pub struct SendMessage<'s> {
-    #[serde(skip)]
     chat_id: ChatRef,
     text: Cow<'s, str>,
     #[serde(skip_serializing_if = "Option::is_none")]
