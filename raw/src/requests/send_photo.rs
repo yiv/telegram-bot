@@ -4,10 +4,11 @@ use crate::requests::*;
 use crate::types::*;
 
 /// Use this method to send photos
-#[derive(Debug, Clone, PartialEq, PartialOrd)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
 #[must_use = "requests do nothing unless sent"]
 pub struct SendPhoto<'c> {
     chat_id: ChatRef,
+    #[serde(skip)]
     photo: InputFile,
     caption: Option<Cow<'c, str>>,
     parse_mode: Option<ParseMode>,

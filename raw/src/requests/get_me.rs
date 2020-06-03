@@ -3,7 +3,7 @@ use crate::types::*;
 
 /// A simple method for testing your bot's auth token. Requires no parameters.
 /// Returns basic information about the bot in form of a User object.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[must_use = "requests do nothing unless sent"]
 pub struct GetMe;
 

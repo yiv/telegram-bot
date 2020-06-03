@@ -3,7 +3,7 @@ use crate::types::*;
 
 /// Strongly typed ChatAction. Instead of passing a String to the
 /// `chat_action` method, this is used.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[must_use = "requests do nothing unless sent"]
 pub enum ChatAction {
     #[serde(rename = "typing")]

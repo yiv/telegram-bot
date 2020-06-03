@@ -1,7 +1,7 @@
 use crate::requests::*;
 use crate::types::*;
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Deserialize)]
 pub struct AnswerInlineQuery {
     inline_query_id: InlineQueryId,
     results: Vec<InlineQueryResult>,

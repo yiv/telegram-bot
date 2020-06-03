@@ -4,7 +4,7 @@ use crate::types::*;
 /// Use this method to edit live location messages sent by the bot.
 /// A location can be edited until its live_period expires or editing
 /// is explicitly disabled by a call to stopMessageLiveLocation.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[must_use = "requests do nothing unless sent"]
 pub struct EditMessageLiveLocation {
     chat_id: ChatRef,

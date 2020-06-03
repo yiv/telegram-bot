@@ -3,7 +3,7 @@ use crate::types::*;
 
 /// Use this method to get basic info about a file and prepare it for downloading.
 /// For the moment, bots can download files of up to 20MB in size.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[must_use = "requests do nothing unless sent"]
 pub struct GetFile {
     file_id: FileRef,

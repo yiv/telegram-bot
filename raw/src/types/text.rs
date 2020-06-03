@@ -2,7 +2,7 @@ use std::path::Path;
 
 use bytes::Bytes;
 
-#[derive(Debug, Clone, PartialEq, PartialOrd, Ord, Eq, Hash)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Ord, Eq, Hash, Default)]
 pub struct Text(Bytes);
 
 impl Text {

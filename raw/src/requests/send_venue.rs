@@ -5,7 +5,7 @@ use crate::requests::*;
 use crate::types::*;
 
 /// Use this method to send information about a venue.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[must_use = "requests do nothing unless sent"]
 pub struct SendVenue<'t, 'a, 'f> {
     chat_id: ChatRef,

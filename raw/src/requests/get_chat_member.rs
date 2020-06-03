@@ -2,7 +2,7 @@ use crate::requests::*;
 use crate::types::*;
 
 /// Use this method to get information about a member of a chat.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[must_use = "requests do nothing unless sent"]
 pub struct GetChatMember {
     chat_id: ChatRef,

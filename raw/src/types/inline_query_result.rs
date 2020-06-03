@@ -3,7 +3,7 @@ use std::ops::Not;
 
 /// This object represents an incoming inline query.
 /// When the user sends an empty query, your bot could return some default or trending results.
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Deserialize)]
 #[serde(tag = "type")]
 pub enum InlineQueryResult {
     /// Represents a link to an mp3 audio file stored on the Telegram servers.
@@ -124,7 +124,7 @@ pub enum InlineQueryResult {
     InlineQueryResultVoice(InlineQueryResultVoice),
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Deserialize)]
 pub struct InlineQueryResultArticle {
     /// Unique identifier for this result, 1-64 Bytes
     pub id: String,
@@ -155,7 +155,7 @@ pub struct InlineQueryResultArticle {
     pub thumb_height: Option<Integer>,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Deserialize)]
 pub struct InlineQueryResultPhoto {
     /// Unique identifier for this result, 1-64 Bytes
     pub id: String,
@@ -189,7 +189,7 @@ pub struct InlineQueryResultPhoto {
     pub input_message_content: Option<InputMessageContent>,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Deserialize)]
 pub struct InlineQueryResultGif {
     /// Unique identifier for this result, 1-64 Bytes
     pub id: String,
@@ -223,7 +223,7 @@ pub struct InlineQueryResultGif {
     pub input_message_content: Option<InputMessageContent>,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Deserialize)]
 pub struct InlineQueryResultMpeg4Gif {
     /// Unique identifier for this result, 1-64 Bytes
     pub id: String,
@@ -256,7 +256,7 @@ pub struct InlineQueryResultMpeg4Gif {
     pub input_message_content: Option<InputMessageContent>,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Deserialize)]
 pub struct InlineQueryResultVideo {
     /// Unique identifier for this result, 1-64 Bytes
     pub id: String,
@@ -294,7 +294,7 @@ pub struct InlineQueryResultVideo {
     pub input_message_content: Option<InputMessageContent>,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Deserialize)]
 pub struct InlineQueryResultAudio {
     /// Unique identifier for this result, 1-64 Bytes
     pub id: String,
@@ -321,7 +321,7 @@ pub struct InlineQueryResultAudio {
     pub input_message_content: Option<InputMessageContent>,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Deserialize)]
 pub struct InlineQueryResultVoice {
     /// Unique identifier for this result, 1-64 Bytes
     pub id: String,
@@ -345,7 +345,7 @@ pub struct InlineQueryResultVoice {
     pub input_message_content: Option<InputMessageContent>,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Deserialize)]
 pub struct InlineQueryResultDocument {
     /// Unique identifier for this result, 1-64 Bytes
     pub id: String,
@@ -381,7 +381,7 @@ pub struct InlineQueryResultDocument {
     pub thumb_height: Option<Integer>,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Deserialize)]
 pub struct InlineQueryResultLocation {
     /// Unique identifier for this result, 1-64 Bytes
     pub id: String,
@@ -411,7 +411,7 @@ pub struct InlineQueryResultLocation {
     pub thumb_height: Option<Integer>,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Deserialize)]
 pub struct InlineQueryResultVenue {
     /// Unique identifier for this result, 1-64 Bytes
     pub id: String,
@@ -447,7 +447,7 @@ pub struct InlineQueryResultVenue {
     pub thumb_height: Option<Integer>,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Deserialize)]
 pub struct InlineQueryResultContact {
     /// Unique identifier for this result, 1-64 Bytes
     pub id: String,
@@ -476,7 +476,7 @@ pub struct InlineQueryResultContact {
     pub thumb_height: Option<Integer>,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Deserialize)]
 pub struct InlineQueryResultGame {
     /// Unique identifier for this result, 1-64 Bytes
     pub id: String,
@@ -487,7 +487,7 @@ pub struct InlineQueryResultGame {
     pub reply_markup: Option<ReplyMarkup>,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Deserialize)]
 pub struct InlineQueryResultCachedPhoto {
     /// Unique identifier for this result, 1-64 Bytes
     pub id: String,
@@ -513,7 +513,7 @@ pub struct InlineQueryResultCachedPhoto {
     pub input_message_content: Option<InputMessageContent>,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Deserialize)]
 pub struct InlineQueryResultCachedGif {
     /// Unique identifier for this result, 1-64 Bytes
     pub id: String,
@@ -536,7 +536,7 @@ pub struct InlineQueryResultCachedGif {
     pub input_message_content: Option<InputMessageContent>,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Deserialize)]
 pub struct InlineQueryResultCachedMpeg4Gif {
     /// Unique identifier for this result, 1-64 Bytes
     pub id: String,
@@ -559,7 +559,7 @@ pub struct InlineQueryResultCachedMpeg4Gif {
     pub input_message_content: Option<InputMessageContent>,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Deserialize)]
 pub struct InlineQueryResultCachedSticker {
     /// Unique identifier for this result, 1-64 Bytes
     pub id: String,
@@ -573,7 +573,7 @@ pub struct InlineQueryResultCachedSticker {
     pub input_message_content: Option<InputMessageContent>,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Deserialize)]
 pub struct InlineQueryResultCachedDocument {
     /// Unique identifier for this result, 1-64 Bytes
     pub id: String,
@@ -598,7 +598,7 @@ pub struct InlineQueryResultCachedDocument {
     pub input_message_content: Option<InputMessageContent>,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Deserialize)]
 pub struct InlineQueryResultCachedVideo {
     /// Unique identifier for this result, 1-64 Bytes
     pub id: String,
@@ -623,7 +623,7 @@ pub struct InlineQueryResultCachedVideo {
     pub input_message_content: Option<InputMessageContent>,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Deserialize)]
 pub struct InlineQueryResultCachedVoice {
     /// Unique identifier for this result, 1-64 Bytes
     pub id: String,
@@ -645,7 +645,7 @@ pub struct InlineQueryResultCachedVoice {
     pub input_message_content: Option<InputMessageContent>,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Deserialize)]
 pub struct InlineQueryResultCachedAudio {
     /// Unique identifier for this result, 1-64 Bytes
     pub id: String,
@@ -826,7 +826,7 @@ impl From<InlineQueryResultVoice> for InlineQueryResult {
 
 /// This object represents the content of a message to be sent as a result of an inline query.
 /// Telegram clients currently support the following 4 types:
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Deserialize)]
 #[serde(untagged)]
 pub enum InputMessageContent {
     /// Represents the content of a text message to be sent as the result of an inline query.
@@ -839,7 +839,7 @@ pub enum InputMessageContent {
     InputContactMessageContent(InputContactMessageContent),
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Deserialize)]
 pub struct InputTextMessageContent {
     /// Text of the message to be sent, 1-4096 characters
     pub message_text: String,
@@ -851,7 +851,7 @@ pub struct InputTextMessageContent {
     pub disable_web_page_preview: bool,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Deserialize)]
 pub struct InputLocationMessageContent {
     /// Latitude of the location in degrees
     pub latitude: Float,
@@ -862,7 +862,7 @@ pub struct InputLocationMessageContent {
     pub live_period: Option<Integer>,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Deserialize)]
 pub struct InputVenueMessageContent {
     /// Latitude of the venue in degrees
     pub latitude: Float,
@@ -881,7 +881,7 @@ pub struct InputVenueMessageContent {
     pub foursqure_type: Option<String>,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Deserialize)]
 pub struct InputContactMessageContent {
     /// Contact's phone number
     pub phone_number: String,

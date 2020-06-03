@@ -4,7 +4,7 @@ use crate::types::*;
 /// Use this method to get a list of administrators in a chat.
 /// If the chat is a group or a supergroup and no administrators were appointed,
 /// only the creator will be returned.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[must_use = "requests do nothing unless sent"]
 pub struct GetChatAdministrators {
     chat_id: ChatRef,

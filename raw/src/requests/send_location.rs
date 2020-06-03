@@ -4,7 +4,7 @@ use crate::requests::*;
 use crate::types::*;
 
 /// Use this method to send point on the map.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[must_use = "requests do nothing unless sent"]
 pub struct SendLocation {
     chat_id: ChatRef,

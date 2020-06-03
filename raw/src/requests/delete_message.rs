@@ -9,7 +9,7 @@ use crate::types::*;
 // other user and service messages about people joining or leaving the
 // group (other types of service messages may only be removed by the group creator).
 // In channels, bots can only remove their own messages.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[must_use = "requests do nothing unless sent"]
 pub struct DeleteMessage {
     chat_id: ChatRef,

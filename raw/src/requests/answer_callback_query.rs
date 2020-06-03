@@ -7,7 +7,7 @@ use crate::types::*;
 /// Use this method to send answers to callback queries sent from inline keyboards.
 /// The answer will be displayed to the user as a notification at the top of
 /// the chat screen or as an alert.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[must_use = "requests do nothing unless sent"]
 pub struct AnswerCallbackQuery<'t> {
     callback_query_id: CallbackQueryId,

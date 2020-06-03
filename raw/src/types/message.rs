@@ -933,7 +933,7 @@ impl File {
 
 /// Strongly typed ParseMode.
 /// See [documentation](https://core.telegram.org/bots/api#formatting-options) for details.
-#[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize)]
+#[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub enum ParseMode {
     /// Use markdown formatting.
     Markdown,

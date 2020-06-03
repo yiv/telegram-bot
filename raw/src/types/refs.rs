@@ -90,7 +90,7 @@ impl ToSourceChat for MessageOrChannelPost {
 
 /// Unique identifier for the target chat or username of the
 /// target channel (in the format @channelusername)
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
 pub enum ChatRef {
     Id(ChatId),
     #[doc(hidden)]
@@ -250,7 +250,7 @@ pub struct UserId(Integer);
 specific_chat_id_impls!(UserId, User);
 
 /// Unique group identifier.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct GroupId(Integer);
 specific_chat_id_impls!(GroupId, Group);
 
@@ -350,7 +350,7 @@ file_id_impls!(Voice);
 file_id_impls!(VideoNote);
 
 /// Unique file identifier reference.
-#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
 pub struct FileRef {
     pub(crate) inner: String,
 }

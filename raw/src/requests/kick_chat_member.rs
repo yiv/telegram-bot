@@ -5,7 +5,7 @@ use crate::types::*;
 /// In the case of supergroups, the user will not be able to return to the group on
 /// their own using invite links, etc., unless unbanned first.
 /// The bot must be an administrator in the group for this to work.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[must_use = "requests do nothing unless sent"]
 pub struct KickChatMember {
     chat_id: ChatRef,

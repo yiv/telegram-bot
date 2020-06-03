@@ -5,11 +5,13 @@ use crate::types::*;
 
 /// Use this method to send general files. On success, the sent Message is returned.
 /// Bots can currently send files of any type of up to 50 MB in size, this limit may be changed in the future.
-#[derive(Debug, Clone, PartialEq, PartialOrd)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
 #[must_use = "requests do nothing unless sent"]
 pub struct SendDocument<'c> {
     chat_id: ChatRef,
+    #[serde(skip)]
     document: InputFile,
+    #[serde(skip)]
     thumb: Option<InputFile>,
     caption: Option<Cow<'c, str>>,
     parse_mode: Option<ParseMode>,

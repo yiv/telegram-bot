@@ -5,7 +5,7 @@ use crate::requests::*;
 use crate::types::*;
 
 /// Use this method to edit text messages sent by the bot.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[must_use = "requests do nothing unless sent"]
 pub struct EditMessageText<'s> {
     chat_id: ChatRef,

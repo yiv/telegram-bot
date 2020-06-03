@@ -5,7 +5,7 @@ use crate::requests::*;
 use crate::types::*;
 
 /// Use this method to export chat invite links.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[must_use = "requests do nothing unless sent"]
 pub struct ExportChatInviteLink {
     chat_id: ChatRef,

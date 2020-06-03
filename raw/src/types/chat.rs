@@ -3,7 +3,6 @@ use serde::ser::SerializeStruct;
 use serde::Serialize;
 
 use crate::types::*;
-use serde::Serializer;
 
 /// This object represents a Telegram user or bot.
 #[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash, Deserialize, Serialize)]
@@ -26,7 +25,7 @@ pub struct User {
 }
 
 /// This object represents a group.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash, Deserialize, Serialize)]
+#[derive(Debug, Default, Clone, PartialEq, PartialOrd, Eq, Ord, Hash, Deserialize, Serialize)]
 pub struct Group {
     /// Unique identifier for this chat.
     pub id: GroupId,
@@ -76,13 +75,14 @@ pub struct Channel {
 }
 
 /// This object represents a private, group or supergroup.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash, Serialize)]
+#[serde(tag = "type")]
 pub enum MessageChat {
-    // #[serde(rename = "chat")]
+    #[serde(rename = "private")]
     Private(User),
-    // #[serde(rename = "chat")]
+    #[serde(rename = "group")]
     Group(Group),
-    // #[serde(rename = "chat")]
+    #[serde(rename = "supergroup")]
     Supergroup(Supergroup),
     #[doc(hidden)]
     Unknown(RawChat),
@@ -98,59 +98,59 @@ impl MessageChat {
         }
     }
 }
-
-impl serde::ser::Serialize for MessageChat {
-    fn serialize<S>(&self, serializer: S) -> Result<<S as Serializer>::Ok, <S as Serializer>::Error> where
-        S: Serializer {
-        match self {
-            MessageChat::Private(u) => {
-                let raw_chat = RawChat {
-                    id: u.id.into(),
-                    type_: "private".to_string(),
-                    title: None,
-                    username: u.username.clone(),
-                    first_name: u.first_name.clone().into(),
-                    last_name: u.last_name.clone(),
-                    invite_link: None,
-                    language_code: u.language_code.clone(),
-                    all_members_are_administrators: None,
-                };
-                serializer.serialize_newtype_struct("chat", &raw_chat)
-            }
-            MessageChat::Group(g) => {
-                let raw_chat = RawChat {
-                    id: g.id.into(),
-                    type_: "private".to_string(),
-                    title: g.title.clone().into(),
-                    username: None,
-                    first_name: None,
-                    last_name: None,
-                    invite_link: g.invite_link.clone(),
-                    language_code: None,
-                    all_members_are_administrators: g.all_members_are_administrators.into(),
-                };
-                serializer.serialize_newtype_struct("chat", &raw_chat)
-            }
-            MessageChat::Supergroup(g) => {
-                let raw_chat = RawChat {
-                    id: g.id.into(),
-                    type_: "private".to_string(),
-                    title: g.title.clone().into(),
-                    username: None,
-                    first_name: None,
-                    last_name: None,
-                    invite_link: g.invite_link.clone(),
-                    language_code: None,
-                    all_members_are_administrators: None
-                };
-                serializer.serialize_newtype_struct("chat", &raw_chat)
-            }
-            MessageChat::Unknown(c) => {
-                serializer.serialize_newtype_struct("chat", c)
-            }
-        }
-    }
-}
+//
+// impl serde::ser::Serialize for MessageChat {
+//     fn serialize<S>(&self, serializer: S) -> Result<<S as Serializer>::Ok, <S as Serializer>::Error> where
+//         S: Serializer {
+//         match self {
+//             MessageChat::Private(u) => {
+//                 let raw_chat = RawChat {
+//                     id: u.id.into(),
+//                     type_: "private".to_string(),
+//                     title: None,
+//                     username: u.username.clone(),
+//                     first_name: u.first_name.clone().into(),
+//                     last_name: u.last_name.clone(),
+//                     invite_link: None,
+//                     language_code: u.language_code.clone(),
+//                     all_members_are_administrators: None,
+//                 };
+//                 serializer.serialize_newtype_struct("chat", &raw_chat)
+//             }
+//             MessageChat::Group(g) => {
+//                 let raw_chat = RawChat {
+//                     id: g.id.into(),
+//                     type_: "private".to_string(),
+//                     title: g.title.clone().into(),
+//                     username: None,
+//                     first_name: None,
+//                     last_name: None,
+//                     invite_link: g.invite_link.clone(),
+//                     language_code: None,
+//                     all_members_are_administrators: g.all_members_are_administrators.into(),
+//                 };
+//                 serializer.serialize_newtype_struct("chat", &raw_chat)
+//             }
+//             MessageChat::Supergroup(g) => {
+//                 let raw_chat = RawChat {
+//                     id: g.id.into(),
+//                     type_: "private".to_string(),
+//                     title: g.title.clone().into(),
+//                     username: None,
+//                     first_name: None,
+//                     last_name: None,
+//                     invite_link: g.invite_link.clone(),
+//                     language_code: None,
+//                     all_members_are_administrators: None
+//                 };
+//                 serializer.serialize_newtype_struct("chat", &raw_chat)
+//             }
+//             MessageChat::Unknown(c) => {
+//                 serializer.serialize_newtype_struct("chat", c)
+//             }
+//         }
+//     }
+// }
 
 /// This object represents a chat.
 #[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash, Serialize)]

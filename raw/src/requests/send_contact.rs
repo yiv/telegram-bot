@@ -5,7 +5,7 @@ use crate::requests::*;
 use crate::types::*;
 
 /// Use this method to send phone contacts.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[must_use = "requests do nothing unless sent"]
 pub struct SendContact<'p, 'f, 'l> {
     chat_id: ChatRef,

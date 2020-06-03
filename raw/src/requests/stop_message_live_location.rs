@@ -3,7 +3,7 @@ use crate::types::*;
 
 /// Use this method to stop updating a live location message sent by the bot
 /// before live_period expires.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[must_use = "requests do nothing unless sent"]
 pub struct StopMessageLiveLocation {
     chat_id: ChatRef,

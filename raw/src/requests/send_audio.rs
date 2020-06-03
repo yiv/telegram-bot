@@ -4,16 +4,18 @@ use crate::requests::*;
 use crate::types::*;
 
 /// Use this method to send an audio
-#[derive(Debug, Clone, PartialEq, PartialOrd)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
 #[must_use = "requests do nothing unless sent"]
 pub struct SendAudio<'c, 'p, 't> {
     chat_id: ChatRef,
+    #[serde(skip)]
     audio: InputFile,
     caption: Option<Cow<'c, str>>,
     parse_mode: Option<ParseMode>,
     duration: Option<Integer>,
     performer: Option<Cow<'p, str>>,
     title: Option<Cow<'t, str>>,
+    #[serde(skip)]
     thumb: Option<InputFile>,
     reply_to_message_id: Option<MessageId>,
     disable_notification: bool,

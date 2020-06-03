@@ -4,10 +4,11 @@ use crate::requests::*;
 use crate::types::*;
 
 /// Use this method to send an video
-#[derive(Debug, Clone, PartialEq, PartialOrd)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
 #[must_use = "requests do nothing unless sent"]
 pub struct SendVideo<'c> {
     chat_id: ChatRef,
+    #[serde(skip)]
     video: InputFile,
     caption: Option<Cow<'c, str>>,
     parse_mode: Option<ParseMode>,
@@ -15,6 +16,7 @@ pub struct SendVideo<'c> {
     width: Option<Integer>,
     height: Option<Integer>,
     supports_streaming: bool,
+    #[serde(skip)]
     thumb: Option<InputFile>,
     reply_to_message_id: Option<MessageId>,
     disable_notification: bool,
