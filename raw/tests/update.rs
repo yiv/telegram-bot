@@ -1,11 +1,13 @@
 use std::fs::File;
 use std::io::prelude::*;
+use std::borrow::Cow;
 
 use telegram_bot_raw::types::message::MessageKind;
 use telegram_bot_raw::types::update::{Update, UpdateKind};
 use telegram_bot_raw::{SendMessage, GroupId};
 use telegram_bot_raw::Chat;
 use telegram_bot_raw::Group;
+use telegram_bot_raw::{Channel, ChannelId, ChatRef, ChatId};
 
 macro_rules! make_test {
     ($asset: ident, $test: expr) => {
@@ -61,17 +63,26 @@ fn test_encode_update(){
 
     let s = serde_json::to_string(&u).unwrap();
     println!("{}", s);
-
 }
 
 #[test]
-fn test_decode_send_message(){
-    let g = Chat::Group(Group::default());
-    let m = SendMessage::new(g, "hel");
+fn test_decode_updates(){
+    let s = r#"[{"update_id":108855559855411200,"channel_post":{"message_id":107408241729867776,"date":1590831008377,"chat":{"type":"channel","id":86506443020308480,"guild_id":76653526742339585,"title":""},"text":"[#@] 来吧","entities":[]}},{"update_id":108855544592338944,"channel_post":{"message_id":107408241729867776,"date":1590831008377,"chat":{"type":"channel","id":86506443020308480,"guild_id":76653526742339585,"title":""},"text":"[#@] 来吧","entities":[]}},{"update_id":108855529421541376,"channel_post":{"message_id":107408241729867776,"date":1590831008377,"chat":{"type":"channel","id":86506443020308480,"guild_id":76653526742339585,"title":""},"text":"[#@] 来吧","entities":[]}},{"update_id":108855501038686208,"channel_post":{"message_id":107408241729867776,"date":1590831008377,"chat":{"type":"channel","id":86506443020308480,"guild_id":76653526742339585,"title":""},"text":"[#@] 来吧","entities":[]}},{"update_id":108854411148791809,"channel_post":{"message_id":107408241729867776,"date":1590831008377,"chat":{"type":"channel","id":86506443020308480,"guild_id":76653526742339585,"title":""},"text":"[#@] 来吧","entities":[]}}]"#;
+    let us = serde_json::from_str::<Vec<Update>>(s).unwrap();
+}
+
+#[test]
+fn test_encode_send_message() {
+    let m = SendMessage{ chat_id:ChatRef::Id(ChatId::new(100)), text: Cow::from("kdkd".to_string()), parse_mode: None, disable_web_page_preview: Some(false), disable_notification: Some(false), reply_to_message_id: None, reply_markup: None };
     let s = serde_json::to_string(&m).unwrap();
     println!("{}", s);
-
-    let s = r#"{"chat_id":550,"text":"hel", "parse_mode":"html", "disable_web_page_preview":true, "disable_notification":true, "reply_to_message_id":true}"#;
+}
+#[test]
+fn test_decode_send_message(){
+    let s = r#"{"chat_id":100,"text":"kdkd"}"#;
+    let s = r#"{"chat_id":107408241729867776,"text":"Hi, You just wrote '[#@] 888来吧'","disable_web_page_preview":false,"disable_notification":false,"reply_to_message_id":107408241729867776}"#;
     let m = serde_json::from_str::<SendMessage>(s).unwrap();
     println!("{:?}", m);
 }
+
+

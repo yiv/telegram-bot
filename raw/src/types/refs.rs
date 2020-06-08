@@ -58,9 +58,9 @@ pub trait ToSourceChat {
 }
 
 impl<S> ToSourceChat for S
-where
-    S: Deref,
-    S::Target: ToSourceChat,
+    where
+        S: Deref,
+        S::Target: ToSourceChat,
 {
     fn to_source_chat(&self) -> ChatId {
         self.deref().to_source_chat()
@@ -75,7 +75,11 @@ impl ToSourceChat for Message {
 
 impl ToSourceChat for ChannelPost {
     fn to_source_chat(&self) -> ChatId {
-        self.chat.id.into()
+        match &self.chat {
+            ChannelChat::Channel(c) => {
+                c.id.into()
+            }
+        }
     }
 }
 
@@ -91,6 +95,7 @@ impl ToSourceChat for MessageOrChannelPost {
 /// Unique identifier for the target chat or username of the
 /// target channel (in the format @channelusername)
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Deserialize)]
+#[serde(untagged)]
 pub enum ChatRef {
     Id(ChatId),
     #[doc(hidden)]
@@ -109,9 +114,9 @@ pub trait ToChatRef {
 }
 
 impl<S> ToChatRef for S
-where
-    S: Deref,
-    S::Target: ToChatRef,
+    where
+        S: Deref,
+        S::Target: ToChatRef,
 {
     fn to_chat_ref(&self) -> ChatRef {
         self.deref().to_chat_ref()
@@ -162,8 +167,8 @@ impl ToChatRef for Forward {
 
 impl Serialize for ChatRef {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
+        where
+            S: Serializer,
     {
         match *self {
             ChatRef::Id(id) => serializer.serialize_i64(id.into()),
@@ -217,9 +222,9 @@ pub trait ToUserId {
 }
 
 impl<S> ToUserId for S
-where
-    S: Deref,
-    S::Target: ToUserId,
+    where
+        S: Deref,
+        S::Target: ToUserId,
 {
     fn to_user_id(&self) -> UserId {
         self.deref().to_user_id()
@@ -260,7 +265,7 @@ pub struct SupergroupId(Integer);
 specific_chat_id_impls!(SupergroupId, Supergroup);
 
 /// Unique channel identifier.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct ChannelId(Integer);
 specific_chat_id_impls!(ChannelId, Channel);
 
@@ -275,9 +280,9 @@ pub trait ToMessageId {
 }
 
 impl<S> ToMessageId for S
-where
-    S: Deref,
-    S::Target: ToMessageId,
+    where
+        S: Deref,
+        S::Target: ToMessageId,
 {
     fn to_message_id(&self) -> MessageId {
         self.deref().to_message_id()
@@ -322,9 +327,9 @@ pub trait ToFileRef {
 }
 
 impl<S> ToFileRef for S
-where
-    S: Deref,
-    S::Target: ToFileRef,
+    where
+        S: Deref,
+        S::Target: ToFileRef,
 {
     fn to_file_ref(&self) -> FileRef {
         self.deref().to_file_ref()
@@ -371,8 +376,8 @@ impl<'a> From<String> for FileRef {
 
 impl Serialize for FileRef {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
+        where
+            S: Serializer,
     {
         serializer.serialize_str(&self.inner)
     }
@@ -384,9 +389,9 @@ pub trait ToCallbackQueryId {
 }
 
 impl<S> ToCallbackQueryId for S
-where
-    S: Deref,
-    S::Target: ToCallbackQueryId,
+    where
+        S: Deref,
+        S::Target: ToCallbackQueryId,
 {
     fn to_callback_query_id(&self) -> CallbackQueryId {
         self.deref().to_callback_query_id()

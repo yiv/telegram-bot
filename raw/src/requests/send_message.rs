@@ -8,18 +8,18 @@ use crate::types::*;
 #[derive(Debug, Clone, PartialEq, PartialOrd, Serialize, Deserialize)]
 #[must_use = "requests do nothing unless sent"]
 pub struct SendMessage<'s> {
-    chat_id: ChatRef,
-    text: Cow<'s, str>,
+    pub chat_id: ChatRef,
+    pub text: Cow<'s, str>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    parse_mode: Option<ParseMode>,
-    #[serde(skip_serializing_if = "Not::not")]
-    disable_web_page_preview: bool,
-    #[serde(skip_serializing_if = "Not::not")]
-    disable_notification: bool,
+    pub parse_mode: Option<ParseMode>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    reply_to_message_id: Option<MessageId>,
+    pub disable_web_page_preview: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    reply_markup: Option<ReplyMarkup>,
+    pub disable_notification: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub reply_to_message_id: Option<MessageId>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub reply_markup: Option<ReplyMarkup>,
 }
 
 impl<'c, 's> Request for SendMessage<'s> {
@@ -41,8 +41,8 @@ impl<'s> SendMessage<'s> {
             chat_id: chat.to_chat_ref(),
             text: text.into(),
             parse_mode: None,
-            disable_web_page_preview: false,
-            disable_notification: false,
+            disable_web_page_preview: Some(false),
+            disable_notification: Some(false),
             reply_to_message_id: None,
             reply_markup: None,
         }
@@ -54,12 +54,12 @@ impl<'s> SendMessage<'s> {
     }
 
     pub fn disable_preview(&mut self) -> &mut Self {
-        self.disable_web_page_preview = true;
+        self.disable_web_page_preview = Some(true);
         self
     }
 
     pub fn disable_notification(&mut self) -> &mut Self {
-        self.disable_notification = true;
+        self.disable_notification = Some(true);
         self
     }
 

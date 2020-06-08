@@ -123,7 +123,7 @@ impl Api {
         &self,
         request: Req,
         duration: Duration,
-    ) -> impl Future<Output = Result<Option<<Req::Response as ResponseType>::Type>, Error>> + Send
+    ) -> impl Future<Output=Result<Option<<Req::Response as ResponseType>::Type>, Error>> + Send
     {
         let api = self.clone();
         let request = request.serialize();
@@ -132,7 +132,7 @@ impl Api {
                 duration,
                 api.send_http_request::<Req::Response>(request.map_err(ErrorKind::from)?),
             )
-            .await
+                .await
             {
                 Err(_) => Ok(None),
                 Ok(Ok(result)) => Ok(Some(result)),
@@ -161,7 +161,7 @@ impl Api {
     pub fn send<Req: Request>(
         &self,
         request: Req,
-    ) -> impl Future<Output = Result<<Req::Response as ResponseType>::Type, Error>> + Send {
+    ) -> impl Future<Output=Result<<Req::Response as ResponseType>::Type, Error>> + Send {
         let api = self.clone();
         let request = request.serialize();
         async move {
@@ -193,13 +193,13 @@ impl Api {
             tracing::trace!("response deserialized");
             Ok(response)
         }
-        .map(|result| {
-            if let Err(ref error) = result {
-                tracing::error!(error = %error);
-            }
-            result
-        })
-        .instrument(span)
-        .await
+            .map(|result| {
+                if let Err(ref error) = result {
+                    tracing::error!(error = %error);
+                }
+                result
+            })
+            .instrument(span)
+            .await
     }
 }

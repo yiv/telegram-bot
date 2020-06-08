@@ -58,7 +58,7 @@ pub struct Supergroup {
 }
 
 /// This object represents a channel.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash, Deserialize, Serialize)]
+#[derive(Default, Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash, Deserialize, Serialize)]
 pub struct Channel {
     /// Unique identifier for this chat.
     pub id: ChannelId,
@@ -73,6 +73,14 @@ pub struct Channel {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub invite_link: Option<String>,
 }
+
+#[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash, Serialize)]
+#[serde(tag = "type")]
+pub enum ChannelChat {
+    #[serde(rename = "channel")]
+    Channel(Channel),
+}
+
 
 /// This object represents a private, group or supergroup.
 #[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash, Serialize)]

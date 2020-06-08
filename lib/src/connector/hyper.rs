@@ -57,6 +57,8 @@ impl<C: Connect + std::fmt::Debug + 'static + Clone + Send + Sync> Connector for
 
             let mut http_request = Request::builder().method(method).uri(uri);
 
+            println!("edwin #145 <{:?}>, <{}>", req.url, req.body.to_string().clone());
+
             let request = match req.body {
                 TelegramBody::Empty => http_request.body(Into::<hyper::Body>::into(vec![])),
                 TelegramBody::Json(body) => {
@@ -149,6 +151,10 @@ impl<C: Connect + std::fmt::Debug + 'static + Clone + Send + Sync> Connector for
                     acc.extend_from_slice(&chunk);
                     acc
                 });
+
+            if body.len() > 0 {
+                println!("edwin #156 <{}>, <{}>", String::from_utf8_lossy(&body), body.len());
+            }
 
             Ok::<HttpResponse, Error>(HttpResponse { body: Some(body) })
         };

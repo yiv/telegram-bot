@@ -48,7 +48,7 @@ pub struct ChannelPost {
     /// Date the message was sent in Unix time.
     pub date: Integer,
     /// Conversation the message belongs to.
-    pub chat: Channel,
+    pub chat: ChannelChat,
     /// Information about the original message.
     #[serde(skip_serializing_if = "Option::is_none")]
     #[serde(flatten)]
@@ -415,7 +415,7 @@ impl ChannelPost {
         let id = raw.message_id;
         let date = raw.date;
         let chat = match raw.chat.clone() {
-            Chat::Channel(channel) => channel,
+            Chat::Channel(channel) => ChannelChat::Channel(channel),
             _ => return Err(format!("Expected channel chat type for ChannelMessage")),
         };
         let reply_to_message = raw.reply_to_message.clone();
